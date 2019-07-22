@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Extension-List: userexits
+Specification-Title: SAP Internet Pricing and Configurator Userexits
+userexits-Extension-Name: your.company
+userexits-Implementation-Vendor-Id: customer userexits
+userexits-Implementation-Author: customer userexits
+userexits-Implementation-Version: 700.SP.yyyymmdd
+userexits-Implementation-Description: 
+
+
+                                                                                                

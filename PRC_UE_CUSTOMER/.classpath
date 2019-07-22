@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib_api" sourcepath="lib_src/src"/>
+	<classpathentry kind="lib" path="lib_vmc_api/base_services_stripped_api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/j2re1.4.2_19"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Specification-Title: SAP Internet Pricing and Configurator
+Created-By: 1.4.2_38-b03 (Sun Microsystems Inc.)
+VMC-Patch-Version: 700.32
+Build-ID: 700.32.0.201405230708.95144
+VMC-Kernel-Patch: 15
+Extension-List: 
+Specification-Version: 7.00
+Implementation-Vendor-Id: com.sap
+Build-By: makefact
+Extension-Package: AP_TTE_SERVICES
+Extension-Type: module
+Build-Codeline: 700_REL
+Ant-Version: Apache Ant 1.6.4
+Extension-Component: IPC
+Specification-Vendor: SAP AG, Walldorf
+Extension-Required-SCVersion: 700.32
+Extension-Name: ap_tte_external_mc
+Implementation-Version: 700.32.0.201405230708.95144
+Extension-Description: ap_tte_external_mc
+Implementation-Vendor: SAP AG, Walldorf
+

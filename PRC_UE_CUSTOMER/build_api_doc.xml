@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="create java doc" default="apidoc" basedir=".">
+
+	<property name="ap_base_database_api"  value="lib_src/ap_base_database_api-src.jar"/>	
+	<property name="ap_prc_conditions_api" value="lib_src/ap_prc_conditions_api-src.jar"/>	
+	<property name="ap_prc_conversion_api" value="lib_src/ap_prc_conversion_api-src.jar"/>	
+	<property name="ap_prc_document_api"   value="lib_src/ap_prc_document_api-src.jar"/>	
+	<property name="ap_prc_freegoods_api"  value="lib_src/ap_prc_freegoods_api-src.jar"/>	
+	<property name="ap_prc_pricing_api"    value="lib_src/ap_prc_pricing_api-src.jar"/>	
+	<property name="ap_prc_text_api"       value="lib_src/ap_prc_text_api-src.jar"/>	
+	<property name="ap_spc_document_api"   value="lib_src/ap_spc_document_api-src.jar"/>	
+	<property name="ap_spc_product_api"    value="lib_src/ap_spc_product_api-src.jar"/>	
+	
+	<property name="api_src" value="lib_src\src"/>
+	<property name="javadocfolder" value="api_doc"/>
+		
+	<target name="deflate">
+		<echo message="dejar api sources ..."/>
+		
+		<unjar src="${ap_base_database_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_conditions_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_conversion_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_document_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_freegoods_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_pricing_api}" dest="${api_src}"/>
+		<unjar src="${ap_prc_text_api}" dest="${api_src}"/>
+		<unjar src="${ap_spc_document_api}" dest="${api_src}"/>
+		<unjar src="${ap_spc_product_api}" dest="${api_src}"/>
+		
+		<echo message="dejar api sources completed"/>	
+	</target>
+
+	<target name="apidoc" depends="deflate">
+		<echo message="create java doc from api sources ..."/>
+		
+		<javadoc author="off" access="public" destdir="${javadocfolder}">
+			<doctitle>Pricing public API for Userexit Projects</doctitle>
+			<packageset dir="${api_src}" defaultexcludes="yes">
+				<include name="**"/>
+			</packageset>
+		</javadoc>		
+
+		<echo message="create java doc from api sources completed"/>
+	</target>
+	
+</project>
