@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone; 
 import com.sap.spe.base.logging.UserexitLogger;
-import com.sap.spe.pricing.customizing.PricingCustomizingConstants;
 import com.sap.spe.pricing.transactiondata.PricingTransactiondataConstants;
 import com.sap.spe.pricing.transactiondata.userexit.IPricingConditionUserExit;
 import com.sap.spe.pricing.transactiondata.userexit.IPricingItemUserExit;
@@ -49,10 +48,15 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
     	
     	String billType = pricingItem.getAttributeValue("ZBILL_TYPE");
     	
+    	 if (uelogger.isLogDebug()){
+   	    	 uelogger.writeLogDebug("Bill Type:"+billType);
+    	       }
+    	
     	//Start: Change as per requirement given on 26.06.2018
     	//String itemType = pricingItem.getAttributeValue("ZITM_TYPE");
     	String zoneTimeCharge = pricingItem.getAttributeValue("ZONE_TIME_CHARGE");
-    	
+    	//Start: Change as per DaaS requirement given on 13.06.2019
+    	String zbill_term = pricingItem.getAttributeValue("ZBILL_TERM");
        	if(zoneTimeCharge.equals("X")) //End: Change as per requirement given on 26.06.2018
 	   		return baseval;
       
@@ -102,6 +106,11 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
    	    myFormat.setTimeZone(TimeZone.getTimeZone("GMT"));      	    
    	    
 	   	try {
+	   		
+	   		if (billType.equals("M") && zbill_term.equals("E")) {
+	   			ccval =  baseval;
+	   		}
+	   	else {
    	       Date startdate = myFormat.parse(contractStartDate);
    	       Date enddate = myFormat.parse(contractEndDate);
    	       
@@ -131,11 +140,16 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
    	    	 uelogger.writeLogDebug("contractEndDate - startdate/365 :"+contractDuration);
     	       }
    	       
-
    	       //  Begin : Added changes by Sateesh - 12/05/2018
    	       //  Copy base value ZNCT as ZACV  if the total contract duration is less than a year 
-   	       if  ( daysContractdate >= YEAR_DAYS ) {
+   	       if  ( daysContractdate >= YEAR_DAYS
+   	    		   // DaaS 8/5/2019 PARDHUG - Skip less than year logic for monthly billing
+   	    		|| (billType.equals("M")) // Contract date less than year & is monthly billing 
+   	    		   ) {
    	    	   //   End changes by Sateesh - 12/05/2018
+   	   	       if (uelogger.isLogDebug()){
+   	  	    	 uelogger.writeLogDebug("Contract Days :"+daysContractdate);
+   	   	       	   }
    	    	   ccval = new BigDecimal("1.00")
    	    			   .divide(contractDuration, 12,BigDecimal.ROUND_HALF_UP);
    	    	   //  Begin : Added changes by Sateesh - 12/05/2018 
@@ -155,13 +169,14 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
      	    	 uelogger.writeLogDebug("ccval :"+ccval);
      	 	 
       	       }
-   	    
+   	       //   DaaS End changes by Kishore - 06/06/2019
+	   	}
+	   		
    	       	  BigDecimal itmqty = pricingItem.getBaseQuantity().getValue();
 		
    	       	  if(ccval.compareTo(PricingTransactiondataConstants.ZERO) > 0)
 			   pricingCondition.setConditionRateValue(ccval.divide(itmqty,2,BigDecimal.ROUND_HALF_UP));
  
-	    	
   	    } catch(Exception ex) {
   		    uelogger.writeLogDebug("exception occured");
   		    return PricingTransactiondataConstants.ZERO;

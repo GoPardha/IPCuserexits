@@ -46,7 +46,9 @@ public class ZScaleBaseFormula extends ScaleBaseFormulaAdapter {
 		
 		String consumedQty = pricingItem.getAttributeValue("ZTOT_CONSUMED_QTY");
 		BigDecimal totalQty = new BigDecimal("0.0");
+
 		
+    	
 		if(consumedQty == null || consumedQty.trim().length() == 0) {
 			return null;
 		}
@@ -63,7 +65,7 @@ public class ZScaleBaseFormula extends ScaleBaseFormulaAdapter {
 				
 			}
 		}
-		
+       	
     	if (uelogger.isLogDebug())
     		uelogger.writeLogDebug("Userexit ScaleBaseValue:"+totalQty.toString());
 

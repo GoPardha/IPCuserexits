@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import com.sap.spe.base.logging.UserexitLogger;
-import com.sap.spe.pricing.customizing.PricingCustomizingConstants;
 import com.sap.spe.pricing.transactiondata.PricingTransactiondataConstants;
 import com.sap.spe.pricing.transactiondata.userexit.IPricingConditionUserExit;
 import com.sap.spe.pricing.transactiondata.userexit.IPricingItemUserExit;
@@ -45,10 +44,14 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
     	
     	BigDecimal baseval = pricingCondition.getConditionBase().getValue();
        	String billType = pricingItem.getAttributeValue("ZBILL_TYPE");
-        
+      //Start: DaaS change as per requirement given on 06.06.2019
+       	String ztermdays = pricingItem.getAttributeValue("ZTERM_DUR");
+       	String zbillterm = pricingItem.getAttributeValue("ZBILL_TERM");
+
        	//Start: Change as per requirement given on 26.06.2018
        	//String itemType = pricingItem.getAttributeValue("ZITM_TYPE");
     	String zoneTimeCharge = pricingItem.getAttributeValue("ZONE_TIME_CHARGE");
+    	
     	
        	if(zoneTimeCharge.equals("X"))		//End: Change as per requirement given on 26.06.2018
 	   		return baseval;
@@ -136,6 +139,25 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
 
    	       diff1 = enddate.getTime() - startdate.getTime();
    	       contractdays = (diff1 / (1000*60*60*24));
+   	 // DaaS Begin of ZCCA changes Added by Kishore : 06/07/2019 
+   	    if (billType.equals("M") && zbillterm.equals("E")) {
+   	    //if ( (billType == "M") && (zbillterm == "E") ) {
+   	 daysNxtBillStdate = (diff / (1000*60*60*24));
+
+    	   BigDecimal contractDuration = new BigDecimal(daysNxtBillStdate).divide(new BigDecimal (ztermdays), 5, BigDecimal.ROUND_HALF_UP);//contract duration, rounding till 5 decimal places
+
+    	   if (uelogger.isLogDebug()){
+    		   uelogger.writeLogDebug("days:nxtAnnualBill - startdate :"+daysNxtBillStdate);
+    		   uelogger.writeLogDebug("xworkd :"+baseval);
+    		   uelogger.writeLogDebug("contractDuration :"+contractDuration);
+    		   uelogger.writeLogDebug("contractDuration :"+baseval);
+    	   }
+
+    	   cca = contractDuration.multiply(baseval);
+   	    }
+   	// DaaS End of ZCCA changes Added by Kishore : 06/07/2019  
+   	    else {
+   	    	
    	       if  ( (contractdays < 365) && (enddate.compareTo(nxtAnnualBill) < 0)){
 
    	    	   cca = baseval;
@@ -143,6 +165,7 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
    	    		   uelogger.writeLogDebug("Contract End Date less than Next Bill date CCA:"+baseval);
    	    	   }  
    	       }
+   	      
    	       else {
    	    	   // End of ZCCA changes Added by Sateesh : 12/07/2018 
 
@@ -160,12 +183,12 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
    	    	   cca = contractDuration.multiply(baseval);
    	    	   
    	       }//  else end; ZCCA changes Added by Sateesh : 12/07/2018 
-		   
+   	    }
+   	    
 		   if(cca.compareTo(PricingTransactiondataConstants.ZERO) > 0) {
 			   BigDecimal itmqty = pricingItem.getBaseQuantity().getValue();
 			   pricingCondition.setConditionRateValue(cca.divide(itmqty,2,BigDecimal.ROUND_HALF_UP));
 		   }
-	    	
   	    } catch(Exception ex) {
   		    uelogger.writeLogDebug("exception occured");
   		    return PricingTransactiondataConstants.ZERO;
