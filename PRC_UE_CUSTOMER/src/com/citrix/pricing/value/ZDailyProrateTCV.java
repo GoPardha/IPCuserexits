@@ -129,7 +129,12 @@ public class ZDailyProrateTCV extends ValueFormulaAdapter {
 	   		//Condition 2) Is the price type monthly(M) & bill term evergreen(E)
 	   		//Condition 3) if none is true execute existing logic of proration
 	   		// --- Condition 1 validation
-	   		if ((zesr.equals("X") || ((billType.equals("M") && zbill_term.equals("E"))))){
+	   		if ((zesr.equals("X") || ((billType.equals("M") && zbill_term.equals("E"))
+	   			    //Start of Change as per ABACUS requirement to include "Annual" BillType 07/21/2020 - Raja Narayanan
+	   				||   billType.equals("R") && zbill_term.equals("E")
+	   				//End of Change as per ABACUS requirement to include "Annual" BillType 07/21/2020 - Raja Narayanan	   				
+	   				
+	   				))){
 	   			//It is a consumption product - base value is exchange rate
 	   			tcv =  exchangeRateValue;
 	   			

@@ -62,7 +62,12 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
       
         if(billType.equals("U"))
 	   		return baseval;
-    	
+
+    	//Start:Change as per ABACUS requirement for Annual Evergreen Billing 07/21/2020 - Raja Narayanan  
+        if(billType.equals("R") && zbill_term.equals("E"))
+	   		return baseval;
+	    //End: Change as per ABACUS requirement for Annual Evergreen Billing 07/21/2020 - Raja Narayanan   
+        
         if (uelogger.isLogDebug()) {
         	uelogger.writeLogDebug("baseval :"+baseval);
         }
@@ -107,7 +112,7 @@ public class ZDailyProrateACV extends ValueFormulaAdapter {
    	    
 	   	try {
 	   		
-	   		if (billType.equals("M") && zbill_term.equals("E")) {
+	   		if (billType.equals("M") && zbill_term.equals("E") ){
 	   			ccval =  baseval;
 	   		}
 	   	else {

@@ -58,7 +58,12 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
        	
         if(billType.equals("U"))
 	   		return baseval;
-    	
+
+    	//Start:Change as per ABACUS requirement for Annual Evergreen Billing 07/21/2020 - Raja Narayanan  
+        if(billType.equals("R") && zbillterm.equals("E"))
+	   		return baseval;
+        //End: Change as per ABACUS requirement for Annual Evergreen Billing 07/21/2020 - Raja Narayanan   
+        
     	if (baseval.compareTo(PricingTransactiondataConstants.ZERO) == 0) {
     		return PricingTransactiondataConstants.ZERO;
     	}
@@ -141,8 +146,8 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
    	       contractdays = (diff1 / (1000*60*60*24));
    	 // DaaS Begin of ZCCA changes Added by Kishore : 06/07/2019 
    	    if (billType.equals("M") && zbillterm.equals("E")) {
-   	    //if ( (billType == "M") && (zbillterm == "E") ) {
-   	 daysNxtBillStdate = (diff / (1000*60*60*24));
+ 	    	
+   	    	daysNxtBillStdate = (diff / (1000*60*60*24));
 
     	   BigDecimal contractDuration = new BigDecimal(daysNxtBillStdate).divide(new BigDecimal (ztermdays), 5, BigDecimal.ROUND_HALF_UP);//contract duration, rounding till 5 decimal places
 
@@ -154,7 +159,7 @@ public class ZCreditCheckAmtVal extends ValueFormulaAdapter {
     	   }
 
     	   cca = contractDuration.multiply(baseval);
-   	    }
+   	     }
    	// DaaS End of ZCCA changes Added by Kishore : 06/07/2019  
    	    else {
    	    	
